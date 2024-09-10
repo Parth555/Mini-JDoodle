@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monaco Editor</title>
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor/min/vs/loader.js"></script>
+    <style>
+        body, html {
+          margin: 0;
+          padding: 0;
+          height: 100%;
+          overflow: hidden;
+        }
+        #editor {
+          height: 100%;
+        }
+    </style>
+</head>
+<body>
+<div id="editor"></div>
+<script>
+    require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor/min/vs' }});
+    require(['vs/editor/editor.main'], function() {
+      window.editor = monaco.editor.create(document.getElementById('editor'), {
+        value: '',
+        language: 'c', // Default language
+        theme: 'vs-dark', // Default theme
+        automaticLayout: true
+      });
+
+      editor.onDidChangeModelContent(() => {
+        CodeChanged.postMessage(editor.getValue()); // This line sends code updates to Flutter
+      });
+
+      window.setCode = (code, language) => {
+        monaco.editor.setModelLanguage(editor.getModel(), language);
+        editor.setValue(code);
+      };
+    });
+</script>
+</body>
+</html>
