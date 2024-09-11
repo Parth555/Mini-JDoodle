@@ -26,14 +26,18 @@ class CodeEditorBloc extends Bloc<CodeEditorEvent, CodeEditorState> {
     on<ExecuteCodeEvent>(_onExecuteCode);
     on<WebSocketOutputEvent>(_onWebSocketOutput);
 
-    // _initializeWebSocket();
+    _initializeWebSocket();
   }
 
   void _initializeWebSocket() async {
-    _webSocketService = WebSocketService();
-    _webSocketService!.output.listen((output) {
-      add(WebSocketOutputEvent(output));
-    });
+    List<LanguageVersion> list =  Constant().parseTable();
+    for(var item in list){
+      print('${item.sNo} : ${item.language} : ${item.languageCode} : ${item.version} : ${item.versionIndex}');
+    }
+    // _webSocketService = WebSocketService();
+    // _webSocketService!.output.listen((output) {
+    //   add(WebSocketOutputEvent(output));
+    // });
   }
 
   FutureOr<void> _onLanguageChanged(LanguageChangedEvent event, Emitter<CodeEditorState> emit) {
