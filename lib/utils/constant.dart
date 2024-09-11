@@ -95,6 +95,10 @@ End Module''',
 main :- write('Hello, World!'), nl.''',
   };
 
+
+ static  String clientId = 'ce82a298540f985656588e6e0690ba8d';
+static String clientSecret = '8bfa8ed5ac6dfcbc07cbd49056f00a477c0c64e41362647183307f91f336b1d9';
+
  static List<String> languages = [
     'C',
     'C++',

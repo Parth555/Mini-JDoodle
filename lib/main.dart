@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       ),
       home: BlocProvider(
         create: (context) => CodeEditorBloc(),
-        child: const CodeEditorScreen(),
+        child:  CodeEditorScreen(),
       ),
     );
   }

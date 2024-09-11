@@ -24,3 +24,14 @@ class LanguageChangedEvent extends CodeEditorEvent {
   @override
   List<Object> get props => [language];
 }
+
+class ExecuteCodeEvent extends CodeEditorEvent {}
+
+class WebSocketOutputEvent extends CodeEditorEvent {
+  final String output;
+
+  const WebSocketOutputEvent(this.output);
+
+  @override
+  List<Object> get props => [output];
+}

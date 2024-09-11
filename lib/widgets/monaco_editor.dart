@@ -69,5 +69,6 @@ class _MonacoEditorState extends State<MonacoEditor> {
         ),
       )
       ..loadRequest(Uri.dataFromString(editorHtml, mimeType: 'text/html', encoding: Encoding.getByName('utf-8')));
+    setState(() {});
   }
 }
