@@ -9,6 +9,7 @@
     let socketClient;
 
     function initializeWebSocket(token, code, language, versionIndex) {
+      console.log('initializeWebSocket : ','');
       socketClient = webstomp.over(new SockJS('https://api.jdoodle.com/v1/stomp'), { heartbeat: false, debug: true });
 
       socketClient.connect({},  () => {
@@ -30,36 +31,24 @@
           }
         });
 
-      
-
-         socketClient.subscribe('message',(message) => {
-
-          console.log('WebSocket statusCode : ',message);
-
-         })
-
-         socketClient.subscribe('execute',(message) => {
-
-          console.log('WebSocket statusCode : ',message);
-
-         })
-         sendCodeToJDoodle(code, language, versionIndex, token);
+    
+         sendCodeToJDoodle(token, code, language, versionIndex);
 
       }, (error) => {
         console.error('WebSocket connection failed', error);
       });
     }
 
-    function sendCodeToJDoodle(code, language, versionIndex, token) {
+    function sendCodeToJDoodle(token, code, language, versionIndex) {
 
-
+         
       // let script = `public class MyClass { public static void main(String args[]) { System.out.println("Hello, World!"); } }`;
             let data = JSON.stringify({
                 clientId: '94ef2c737bc178609618b80061760f11',
                 clientSecret: '856069412fefef1642e103ffaa456a9e377210d43fc4f711c52c96a896c6f88a',
                 script: code,
                 language: language,
-                versionIndex: 0
+                versionIndex: Number(versionIndex)
             });
       // const data = JSON.stringify({
       //   clientId: 'ce82a298540f985656588e6e0690ba8d',
@@ -80,6 +69,7 @@
 
     // Call this function to start the WebSocket connection
     function startJDoodleSession(token, code, language, versionIndex) {
+      console.log('initializeWebSocket :' );
       initializeWebSocket(token, code, language, versionIndex);
     
     }

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../utils/constant.dart';
+import '../utils/preference.dart';
 
 class MonacoEditor extends StatefulWidget {
   final String language;
@@ -23,7 +24,7 @@ class _MonacoEditorState extends State<MonacoEditor> {
   void initState() {
     super.initState();
     inItController();
-    _updateMonacoLanguage(Constant.languages[0].toLowerCase());
+
   }
 
   @override
@@ -44,8 +45,10 @@ class _MonacoEditorState extends State<MonacoEditor> {
 
   void _updateMonacoLanguage(String language) {
     // Update the language in Monaco Editor dynamically
-    webViewController.runJavaScript('monaco.editor.setModelLanguage(editor.getModel(), "$language");');
-
+    print("_updateMonacoLanguage : $language");
+    webViewController.runJavaScript('setLanguageCode("$language")');
+    webViewController.runJavaScript('setCode("")');
+    // webViewController.runJavaScript('setCode("print(Helol)")');
   }
 
 
@@ -65,9 +68,30 @@ class _MonacoEditorState extends State<MonacoEditor> {
           onPageStarted: (String url) {
           },
           onPageFinished: (String url) {
+            _updateMonacoLanguage(Preference.shared.getString(Preference.selectedLanguage) ?? 'Java'.toLowerCase());
+           String firstCode =  '''
+public class AddNumbers {
+  public static void main(String[] args) {
+    int num1 = 5, num2 = 10, sum;
+    sum = num1 + num2;
+    System.out.println(“Sum of ” + num1 + ” and ” + num2 + ” is: ” + sum);
+ }
+}''';
+            // Set the code in Monaco Editor
+            final escapedCode = firstCode.replaceAll('\n', '\\n').replaceAll('"', '\\"'); // Escape newlines and quotes
+
+
+            if(Preference.shared.getString(Preference.selectedLanguage)==null) {
+              print(firstCode);
+              webViewController.runJavaScript('setCode("$escapedCode")');
+            }
+
           },
         ),
       )
+      ..setOnConsoleMessage((onConsoleMessage) {
+        print('onConsoleMessage.message : ${onConsoleMessage.message}');
+      })
       ..loadRequest(Uri.dataFromString(editorHtml, mimeType: 'text/html', encoding: Encoding.getByName('utf-8')));
     setState(() {});
   }

@@ -17,12 +17,21 @@ class CodeChangedEvent extends CodeEditorEvent {
 }
 
 class LanguageChangedEvent extends CodeEditorEvent {
-  final String language;
+  final ProgrammingLanguage language;
 
   const LanguageChangedEvent(this.language);
 
   @override
   List<Object> get props => [language];
+}
+
+class LanguageVersionChangedEvent extends CodeEditorEvent {
+  final Version version;
+
+  const LanguageVersionChangedEvent(this.version);
+
+  @override
+  List<Object> get props => [version];
 }
 
 class ExecuteCodeEvent extends CodeEditorEvent {}

@@ -21,6 +21,8 @@ dependencies:
   uuid: ^4.5.0 # To generate unique IDs for saved programs
   web_socket_channel: ^3.0.1
   html: ^0.15.4
+  dropdown_button2: ^2.3.9
+  custom_radio_grouped_button: ^2.2.1
 
 dev_dependencies:
   flutter_test:

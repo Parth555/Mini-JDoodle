@@ -3,7 +3,7 @@ class ProgrammingLanguage {
   final String languageCode;
   final List<Version> versions;
 
-  ProgrammingLanguage({required this.name, required this.languageCode, required this.versions});
+  const ProgrammingLanguage({required this.name, required this.languageCode, required this.versions});
 
   factory ProgrammingLanguage.fromJson(Map<String, dynamic> json) {
     var versionsFromJson = json['versions'] as List;
@@ -23,13 +23,15 @@ class ProgrammingLanguage {
       'versions': versions.map((version) => version.toJson()).toList(),
     };
   }
+
+
 }
 
 class Version {
   final String version;
   final int index;
 
-  Version({required this.version, required this.index});
+  const Version({required this.version, required this.index});
 
   factory Version.fromJson(Map<String, dynamic> json) {
     return Version(
@@ -46,7 +48,7 @@ class Version {
   }
 }
 
-List<ProgrammingLanguage> programmingLanguages = [
+ const List<ProgrammingLanguage> programmingLanguages = [
   ProgrammingLanguage(
     name: 'Java',
     languageCode: 'java',
@@ -894,3 +896,4 @@ List<ProgrammingLanguage> programmingLanguages = [
     ],
   ),
 ];
+
