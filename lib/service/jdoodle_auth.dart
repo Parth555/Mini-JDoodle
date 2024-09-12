@@ -18,6 +18,7 @@ class JDoodleAuth {
       print('response.body : ${response.body}');
       return response.body;
     } else {
+      print('response.body : ${response.body}');
       throw Exception('Failed to obtain authentication token');
     }
   }

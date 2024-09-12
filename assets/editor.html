@@ -28,26 +28,29 @@
         theme: 'vs-dark', // Default theme
         automaticLayout: true
       });
+      console.log('Editor created:', window.editor);
+      // Notify Dart code that the editor is ready
+      window.dispatchEvent(new Event('editorReady'));
 
       editor.onDidChangeModelContent(() => {
         CodeChanged.postMessage(editor.getValue()); // This line sends code updates to Flutter
       });
 
       window.setLanguageCode = (language) => {
-        console.log('WebSocket statusCode : ',language);
-        editor.setModelLanguage(editor.getModel(), language);
-        
+        console.log('WebSocket statusCode 1: ',language);
+        console.log('editor object:', editor);
+        console.log('editor.getModel():', editor.getModel());
+  editor.getModel().setLanguage(language);
+  //console.log('editor.setModelLanguage:', editor.setModelLanguage);
+        //editor.setModelLanguage(editor.getModel(), language);
+
       };
 
       window.setCode = (code) => {
-        console.log('WebSocket statusCode : ',code);
+        console.log('WebSocket statusCode 2: ',code);
         editor.setValue(code);
       };
-      // function setCode(code) {
-      // console.log('initializeWebSocket : ','');
-      // editor.setValue("print();");
-    
-      // }
+
     });
 </script>
 </body>

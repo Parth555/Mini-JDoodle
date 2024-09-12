@@ -24,9 +24,10 @@ class CodeEditorBloc extends Bloc<CodeEditorEvent, CodeEditorState> {
 
   CodeEditorBloc()
       : super(CodeEditorState(
-            code: 'public class MyClass { public static void main(String args[]) { System.out.println("Hello, World!"); } }',
+            codeEditorStatus: CodeEditorStatus.initial,
+            code: Preference.shared.getString(Preference.currantProgram)??'public class MyClass { \n public static void main(String args[]) { \nSystem.out.println("Hello, World!"); \n} \n}',
             language: Preference.shared.getString(Preference.selectedLanguage) ?? 'Java',
-            selectedLanguageCode: 'java',
+            selectedLanguageCode:Preference.shared.getString(Preference.selectedLanguageCODE) ?? 'java',
             selectedLanguageIndex: Preference.shared.getInt(Preference.selectedLanguageIndex) ?? 0)) {
     on<LanguageChangedEvent>(_onLanguageChanged);
     on<LanguageVersionChangedEvent>(_onLanguageVersionChanged);
@@ -38,10 +39,6 @@ class CodeEditorBloc extends Bloc<CodeEditorEvent, CodeEditorState> {
   }
 
   void _initializeWebSocket() async {
-    List<LanguageVersion> list = Constant().parseTable();
-    for (var item in list) {
-      print('${item.sNo} : ${item.language} : ${item.languageCode} : ${item.version} : ${item.versionIndex}');
-    }
     // _webSocketService = WebSocketService();
     // _webSocketService!.output.listen((output) {
     //   add(WebSocketOutputEvent(output));
@@ -50,6 +47,7 @@ class CodeEditorBloc extends Bloc<CodeEditorEvent, CodeEditorState> {
 
   FutureOr<void> _onLanguageChanged(LanguageChangedEvent event, Emitter<CodeEditorState> emit) {
     Preference.shared.setString(Preference.selectedLanguage, event.language.name);
+    Preference.shared.setString(Preference.selectedLanguageCODE, event.language.languageCode);
     emit(state.copyWith(language: event.language.name, selectedLanguageCode: event.language.languageCode));
   }
 
@@ -59,17 +57,23 @@ class CodeEditorBloc extends Bloc<CodeEditorEvent, CodeEditorState> {
   }
 
   FutureOr<void> _onCodeChanged(CodeChangedEvent event, Emitter<CodeEditorState> emit) {
+    final escapedCode = event.code.replaceAll('\n', ''); // Escape newlines and quotes
+
+    print("escapedCode1 $escapedCode" );
+    print("escapedCode1 ${event.code}" );
+    Preference.shared.setString(Preference.currantProgram,escapedCode);
     emit(state.copyWith(code: event.code));
   }
 
   Future<void> _onExecuteCode(ExecuteCodeEvent event, Emitter<CodeEditorState> emit) async {
+    emit(state.copyWith(codeEditorStatus: CodeEditorStatus.loading));
     final token = await JDoodleAuth.getAuthToken(Constant.clientId, Constant.clientSecret);
     _initializeWebSocketWithJavaScript(token,state.code,state.selectedLanguageCode,state.selectedLanguageIndex);
     // _webSocketService!.sendCode(state.code, state.language, 0, token); // VersionIndex is hardcoded for now
   }
 
   FutureOr<void> _onWebSocketOutput(WebSocketOutputEvent event, Emitter<CodeEditorState> emit) {
-    emit(state.copyWith(output: event.output));
+    emit(state.copyWith(codeEditorStatus: CodeEditorStatus.success,output: event.output));
   }
 
   @override
@@ -98,13 +102,16 @@ class CodeEditorBloc extends Bloc<CodeEditorEvent, CodeEditorState> {
           onPageFinished: (String url) async {
             // After loading, inject the token and code into JavaScript
             print('onPageFinished.message : $code');
-            final escapedCode = code.replaceAll('\n', '\\n').replaceAll('"', '\\"'); // Escape newlines and quotes
+            final escapedCode = code.replaceAll('\n', '').replaceAll('"', '\\"'); // Escape newlines and quotes
             await webViewController.runJavaScript('startJDoodleSession("$token", "$escapedCode", "$language","$selectedLanguageIndex");');
           },
         ),
       )
       ..setOnConsoleMessage((onConsoleMessage) {
         print('onConsoleMessage.message : ${onConsoleMessage.message}');
+        // if(onConsoleMessage.message.contains('Error')){
+        //   add(WebSocketOutputEvent(onConsoleMessage.message));
+        // }
       })
       ..loadRequest(Uri.dataFromString(editorHtml, mimeType: 'text/html', encoding: Encoding.getByName('utf-8')));
   }

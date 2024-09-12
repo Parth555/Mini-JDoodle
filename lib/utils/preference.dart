@@ -7,7 +7,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Preference {
   // Preference key
   static const String selectedLanguage = "LANGUAGE";
+  static const String selectedLanguageCODE = "LANGUAGE_CODE";
   static const String selectedLanguageIndex = "SELECTED_LANGUAGE_INDEX";
+  static const String currantProgram = "CURRANT_PROGRAM";
 
   static const String fcmToken = "FCM_TOKEN";
   static const String accessToken = "ACCESS_TOKEN";

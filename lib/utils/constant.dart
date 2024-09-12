@@ -58,13 +58,11 @@ const Duration defaultDuration = Duration(milliseconds: 300);
 
 class Constant {
 
-
-
- // static  String clientId = 'ce82a298540f985656588e6e0690ba8d';
-// static String clientSecret = '8bfa8ed5ac6dfcbc07cbd49056f00a477c0c64e41362647183307f91f336b1d9';
-
-static  String clientId = '94ef2c737bc178609618b80061760f11';
-static String clientSecret = '856069412fefef1642e103ffaa456a9e377210d43fc4f711c52c96a896c6f88a';
+   static  String clientId = 'ce82a298540f985656588e6e0690ba8d';
+static String clientSecret = '8bfa8ed5ac6dfcbc07cbd49056f00a477c0c64e41362647183307f91f336b1d9';
+//
+// static  String clientId = '94ef2c737bc178609618b80061760f11';
+// static String clientSecret = '856069412fefef1642e103ffaa456a9e377210d43fc4f711c52c96a896c6f88a';
 
  static List<String> languages = [
     'C',

@@ -4,6 +4,7 @@ import 'package:jdoodle/utils/constant.dart';
 
 import '../../models/programing_language.dart';
 import '../../service/jdoodle_web_socket.dart';
+import '../../widgets/alert_dialog_widget.dart';
 import '../../widgets/monaco_editor.dart';
 import 'bloc/code_editor_bloc.dart';
 import 'language_selection_bottom_sheet.dart';
@@ -18,7 +19,17 @@ class CodeEditorScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<CodeEditorBloc, CodeEditorState>(
       listener: (context, state) {
-        // TODO: implement listener
+        if (state.codeEditorStatus.isLoading) {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) => const AlertDialogWidget(),
+          );
+        }
+        if (state.codeEditorStatus.isSuccess) {
+          Navigator.pop(context);
+          _showPlayBottomSheet(context);
+        }
       },
       builder: (context, state) {
         return Scaffold(
@@ -42,7 +53,7 @@ class CodeEditorScreen extends StatelessWidget {
             children: [
               Expanded(
                 child: MonacoEditor(
-                  language: state.language,
+                  language: state.selectedLanguageCode,
                   code: state.code,
                   onCodeChanged: (code) {
                     context.read<CodeEditorBloc>().add(CodeChangedEvent(code));
@@ -52,7 +63,8 @@ class CodeEditorScreen extends StatelessWidget {
 
             ],
           ),
-          bottomNavigationBar: BottomNavigationBar(
+          bottomNavigationBar:
+          BottomNavigationBar(
             onTap: (index){
               if(index==0){
                 _showLanguageSelectionBottomSheet(context);
@@ -79,7 +91,7 @@ class CodeEditorScreen extends StatelessWidget {
               icon: const Icon(Icons.play_circle,size: 40,),
                onPressed: () {
                  context.read<CodeEditorBloc>().add(ExecuteCodeEvent());
-                 _showPlayBottomSheet(context);
+
                }),
           floatingActionButtonLocation: FloatingActionButtonLocation.miniCenterDocked,
         );
