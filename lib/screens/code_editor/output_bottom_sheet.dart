@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jdoodle/utils/constant.dart';
 
 import 'bloc/code_editor_bloc.dart';
 
@@ -17,9 +18,20 @@ class OutputBottomSheet extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height/2,
           padding: const EdgeInsets.all(25),
-          child: Text(
-            'Output:\n${state.output}',
-            style: const TextStyle(color: Colors.black, fontSize: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Text(
+                  'Output',
+                  style: const TextStyle(color: primaryColor, fontSize: 25),
+                ),
+              ),
+              Text(
+                '${state.output}',
+                style: const TextStyle(color: successColor, fontSize: 20),
+              ),
+            ],
           ),
         );
       },

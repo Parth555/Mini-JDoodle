@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jdoodle/utils/constant.dart';
 
+import '../../database/models/program.dart';
 import '../../models/programing_language.dart';
 import '../../service/jdoodle_web_socket.dart';
 import '../../widgets/alert_dialog_widget.dart';
 import '../../widgets/monaco_editor.dart';
 import 'bloc/code_editor_bloc.dart';
+import 'history_bottom_sheet.dart';
 import 'language_selection_bottom_sheet.dart';
 import 'output_bottom_sheet.dart';
 
@@ -29,6 +31,14 @@ class CodeEditorScreen extends StatelessWidget {
         if (state.codeEditorStatus.isSuccess) {
           Navigator.pop(context);
           _showPlayBottomSheet(context);
+          Program program = Program(
+            code:  state.code,
+            output:  state.output,
+            language:  state.language,
+            languageCode:  state.selectedLanguageCode,
+            languageCodeIndex:  state.selectedLanguageIndex,
+          );
+          context.read<CodeEditorBloc>().add(AddDataEvent(program));
         }
       },
       builder: (context, state) {
@@ -53,6 +63,7 @@ class CodeEditorScreen extends StatelessWidget {
             children: [
               Expanded(
                 child: MonacoEditor(
+                  program: state.selectedProgramForEdit,
                   language: state.selectedLanguageCode,
                   code: state.code,
                   onCodeChanged: (code) {
@@ -65,9 +76,13 @@ class CodeEditorScreen extends StatelessWidget {
           ),
           bottomNavigationBar:
           BottomNavigationBar(
+            selectedItemColor: primaryColor,
+            unselectedItemColor: primaryColor,
             onTap: (index){
               if(index==0){
                 _showLanguageSelectionBottomSheet(context);
+              }if(index==1){
+                _showHistoryBottomSheet(context);
               }
             },
             // currentIndex: _currentIndex,
@@ -78,8 +93,8 @@ class CodeEditorScreen extends StatelessWidget {
               ),
 
               BottomNavigationBarItem(
-                icon: Icon(Icons.settings),
-                label: 'Setting',
+                icon: Icon(Icons.history_rounded),
+                label: 'History',
               ),
             ],
           ),
@@ -109,6 +124,13 @@ class CodeEditorScreen extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       builder: (_) => OutputBottomSheet(context),
+    );
+  }
+  void _showHistoryBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      isScrollControlled:true,
+      context: context,
+      builder: (_) => HistoryBottomSheet(context),
     );
   }
 }

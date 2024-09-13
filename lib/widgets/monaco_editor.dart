@@ -4,15 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import '../database/models/program.dart';
 import '../utils/constant.dart';
 import '../utils/preference.dart';
 
 class MonacoEditor extends StatefulWidget {
   final String language;
   final String code;
+  final Program? program;
   final Function(String) onCodeChanged;
 
-  const MonacoEditor({super.key, required this.language, required this.code, required this.onCodeChanged});
+  const MonacoEditor({super.key, required this.language, required this.code, required this.onCodeChanged, required this.program});
 
   @override
   State<MonacoEditor> createState() => _MonacoEditorState();
@@ -41,6 +43,11 @@ class _MonacoEditorState extends State<MonacoEditor> {
     if (oldWidget.language != widget.language) {
       _updateMonacoLanguage(widget.language.toLowerCase());
       webViewController.runJavaScript('setCode("")');
+    }
+    if (oldWidget.program != widget.program) {
+      // _updateMonacoLanguage(widget.language.toLowerCase());
+      final escapedCode = widget.code.replaceAll('\n', '').replaceAll('"', '\\"');
+      webViewController.runJavaScript('setCode("$escapedCode")');
     }
   }
 

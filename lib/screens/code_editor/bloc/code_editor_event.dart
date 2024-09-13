@@ -44,3 +44,30 @@ class WebSocketOutputEvent extends CodeEditorEvent {
   @override
   List<Object> get props => [output];
 }
+
+class AddDataEvent extends CodeEditorEvent {
+  final Program program;
+
+  const AddDataEvent(this.program);
+
+  @override
+  List<Object> get props => [program];
+}
+
+class SetProgramForEditEvent extends CodeEditorEvent {
+  final Program program;
+
+  const SetProgramForEditEvent(this.program);
+
+  @override
+  List<Object> get props => [program];
+}
+
+class DeleteDataEvent extends CodeEditorEvent {
+  final Program program;
+
+  const DeleteDataEvent(this.program);
+
+  @override
+  List<Object> get props => [program];
+}

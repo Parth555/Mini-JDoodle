@@ -21,6 +21,7 @@ class CodeEditorState extends Equatable {
   final int selectedLanguageIndex;
   final String output;
   final CodeEditorStatus codeEditorStatus;
+  final Program? selectedProgramForEdit;
 
   const CodeEditorState({
     required this.code,
@@ -29,6 +30,7 @@ class CodeEditorState extends Equatable {
     this.output = '',
     this.selectedLanguageCode = 'java',
     this.selectedLanguageIndex = 0,
+    this.selectedProgramForEdit,
   });
 
   CodeEditorState copyWith({
@@ -38,6 +40,7 @@ class CodeEditorState extends Equatable {
     String? selectedLanguageCode,
     CodeEditorStatus? codeEditorStatus,
     int? selectedLanguageIndex,
+    Program? selectedProgramForEdit,
   }) {
     return CodeEditorState(
       code: code ?? this.code,
@@ -46,9 +49,18 @@ class CodeEditorState extends Equatable {
       codeEditorStatus: codeEditorStatus ?? this.codeEditorStatus,
       selectedLanguageCode: selectedLanguageCode ?? this.selectedLanguageCode,
       selectedLanguageIndex: selectedLanguageIndex ?? this.selectedLanguageIndex,
+      selectedProgramForEdit: selectedProgramForEdit ?? this.selectedProgramForEdit,
     );
   }
 
   @override
-  List<Object> get props => [code, language, output, selectedLanguageCode, selectedLanguageIndex,codeEditorStatus];
+  List<Object?> get props => [
+        code,
+        language,
+        output,
+        selectedLanguageCode,
+        selectedLanguageIndex,
+        codeEditorStatus,
+        selectedProgramForEdit,
+      ];
 }
