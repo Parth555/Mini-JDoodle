@@ -43,15 +43,11 @@ class ObjectBox {
         languageCodeIndex: product.languageCodeIndex,
       ));
   updateProgramItems(Program program, int id)  {
-    print('program.id  :${program.id}');
-    print('program.id  :${id}');
 
     final builder =
     _programBox.query(Program_.id.equals(id)).order(Program_.date, flags: Order.descending);
     List<Program> itemList =  builder.build().find();
-    print('item  :${itemList.length}');
     for(var item in itemList){
-      print('item  :${item.id}');
       var programItem = _programBox.get(item.id)!;      // Read
       programItem.code= program.code;
       programItem.output= program.output;

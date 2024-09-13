@@ -53,12 +53,10 @@ class _MonacoEditorState extends State<MonacoEditor> {
 
   void _updateMonacoLanguage(String language) {
     // Update the language in Monaco Editor dynamically
-    print("_updateMonacoLanguage : $language");
     Future.delayed(const Duration(milliseconds: 500), () {
       webViewController.runJavaScript('setLanguageCode("$language")');
     });
 
-    // webViewController.runJavaScript('setCode("print(Helol)")');
   }
 
 
@@ -88,16 +86,13 @@ class _MonacoEditorState extends State<MonacoEditor> {
              // await Future.delayed(Duration(seconds: 2));
             if(Preference.shared.getString(Preference.selectedLanguage)==null) {
               final escapedCode = firstCode.replaceAll('\n', '').replaceAll('"', '\\"'); // Escape newlines and quotes
-              print(escapedCode);
-              Preference.shared.setString(Preference.selectedLanguage,'Java');
+             Preference.shared.setString(Preference.selectedLanguage,'Java');
               Preference.shared.setString(Preference.selectedLanguageCODE,'java');
               Preference.shared.setString(Preference.currantProgram,escapedCode);
               Preference.shared.setInt(Preference.selectedLanguageIndex,0);
               webViewController.runJavaScript('setCode("$escapedCode")');
             }else{
               final escapedCode = Preference.shared.getString(Preference.currantProgram)!.replaceAll('\n', '').replaceAll('"', '\\"');
-              print('escapedCode :;;;;;;;;;;;;;;;;; $escapedCode');
-              print('escapedCode :;;;;;;;;;;;;;;;;; ${Preference.shared.getString(Preference.currantProgram)}');
               webViewController.runJavaScript('setCode("$escapedCode")');
             }
            _updateMonacoLanguage(Preference.shared.getString(Preference.selectedLanguageCODE) ?? 'java'.toLowerCase());
@@ -105,7 +100,6 @@ class _MonacoEditorState extends State<MonacoEditor> {
         ),
       )
       ..setOnConsoleMessage((onConsoleMessage) {
-        print('onConsoleMessage.message : ${onConsoleMessage.message}');
       })
       ..loadRequest(Uri.dataFromString(editorHtml, mimeType: 'text/html', encoding: Encoding.getByName('utf-8')));
     setState(() {});

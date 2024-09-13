@@ -15,10 +15,8 @@ class JDoodleAuth {
     );
 
     if (response.statusCode == 200) {
-      print('response.body : ${response.body}');
-      return response.body;
+     return response.body;
     } else {
-      print('response.body : ${response.body}');
       throw Exception('Failed to obtain authentication token');
     }
   }

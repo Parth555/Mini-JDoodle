@@ -65,8 +65,6 @@ class CodeEditorBloc extends Bloc<CodeEditorEvent, CodeEditorState> {
   FutureOr<void> _onCodeChanged(CodeChangedEvent event, Emitter<CodeEditorState> emit) {
     final escapedCode = event.code.replaceAll('\n', ''); // Escape newlines and quotes
 
-    print("escapedCode1 $escapedCode");
-    print("escapedCode1 ${event.code}");
     Preference.shared.setString(Preference.currantProgram, escapedCode);
     emit(state.copyWith(code: event.code));
   }
@@ -96,25 +94,20 @@ class CodeEditorBloc extends Bloc<CodeEditorEvent, CodeEditorState> {
       ..addJavaScriptChannel(
         'fromJavaScript',
         onMessageReceived: (JavaScriptMessage message) {
-          print('message.message 1: ${message.message}');
-          add(WebSocketOutputEvent(message.message));
+         add(WebSocketOutputEvent(message.message));
         },
       )
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageStarted: (String url) {
-            print('onPageStarted.message : ');
           },
           onPageFinished: (String url) async {
-            // After loading, inject the token and code into JavaScript
-            print('onPageFinished.message : $code');
-            final escapedCode = code.replaceAll('\n', '').replaceAll('"', '\\"'); // Escape newlines and quotes
+           final escapedCode = code.replaceAll('\n', '').replaceAll('"', '\\"'); // Escape newlines and quotes
             await webViewController.runJavaScript('startJDoodleSession("$token", "$escapedCode", "$language","$selectedLanguageIndex");');
           },
         ),
       )
       ..setOnConsoleMessage((onConsoleMessage) {
-        print('onConsoleMessage.message : ${onConsoleMessage.message}');
         if(onConsoleMessage.message.contains('Error: Daily limit reached')){
           add(WebSocketOutputEvent(onConsoleMessage.message));
         }
